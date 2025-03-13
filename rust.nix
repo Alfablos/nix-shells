@@ -1,6 +1,10 @@
-{ pkgs, ... }:
+{
+  pkgs
+  , rustVersion
+  , ...
+}:
 let
-  oxalica-override = pkgs.rust-bin.stable."1.84.0".default.override {
+  oxalica-override = pkgs.rust-bin.stable.${rustVersion}.default.override {
     extensions = [ "rust-src" "clippy" "rust-analyzer" "rustfmt" ];
   };
 in
