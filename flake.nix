@@ -36,7 +36,7 @@
           pkgs.callPackage ./rust.nix {
             pkgs = import nixpkgs { system = pkgs.system; overlays = [ (import oxalica-rust) ]; };
             crate2nix = crate2nix.packages.${pkgs.system}.default;
-            inherit rustVersion;
+            inherit rustVersion withPkgs;
         };
         lib.configs.neovim.rust = {}; # TODO
       });
