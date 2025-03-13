@@ -2,6 +2,7 @@
   pkgs
   , rustVersion
   , crate2nix
+  , withPkgs ? [ ]
   , ...
 }:
 let
@@ -18,7 +19,7 @@ in
       # Since aliases don't work
       (pkgs.writeShellScriptBin "rustrover" "tmux new -d '$HOME/.local/share/JetBrains/Toolbox/apps/rustrover/bin/rustrover .'")
       crate2nix
-    ];
+    ] ++ ( with pkgs; withPkgs );
     
     RUST_SRC_PATH = "${oxalica-override}/lib/rustlib/src/rust";
 
