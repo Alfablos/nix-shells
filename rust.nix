@@ -1,6 +1,7 @@
 {
   pkgs
   , rustVersion
+  , crate2nix
   , ...
 }:
 let
@@ -16,6 +17,7 @@ in
       pkgs.nodejs-slim
       # Since aliases don't work
       (pkgs.writeShellScriptBin "rustrover" "tmux new -d '$HOME/.local/share/JetBrains/Toolbox/apps/rustrover/bin/rustrover .'")
+      crate2nix
     ];
     
     RUST_SRC_PATH = "${oxalica-override}/lib/rustlib/src/rust";
