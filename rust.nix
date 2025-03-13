@@ -21,8 +21,8 @@ in
     RUST_SRC_PATH = "${oxalica-override}/lib/rustlib/src/rust";
 
     shellHook = ''
-      alias rustrover="tmux new -d '$HOME/.local/share/JetBrains/Toolbox/apps/rustrover/bin/rustrover .'"
       alias v=nvim
+      alias vim=nvim
 
       export RUST_BACKTRACE=full
 
