@@ -21,8 +21,8 @@
 
     in
     {
-      devShells = forAllSystems (pkgs: rec {
-        default = rust;
+      devShells = forAllSystems (pkgs: {
+        default = self.devShells.${pkgs.system}.rust;
         rust = self.packages.${pkgs.system}.lib.shells.rust { };
       });
 
