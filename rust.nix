@@ -2,7 +2,7 @@
   pkgs
   , rustVersion
   , crate2nix
-  , withPkgs ? [ ]
+  , withPkgs
   , ...
 }:
 let
