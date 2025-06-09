@@ -2,7 +2,10 @@
   description = "Rust shell";
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs";
-    oxalica-rust.url = "github:oxalica/rust-overlay";
+    oxalica-rust = {
+      url = "github:oxalica/rust-overlay";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     crate2nix = {  # Only used for `crate2nix generate`
       url = "github:nix-community/crate2nix";
       inputs.nixpkgs.follows = "nixpkgs";
