@@ -35,7 +35,7 @@
       });
 
       packages = forAllSystems (pkgs: {
-        lib.shells.rust = { rustVersion ? "1.84.0", withPkgs ? [ ] }:
+        lib.shells.rust = { rustVersion ? "1.84.0", withPkgs ? [ ], additionalLibraryPaths ? null }:
           pkgs.callPackage ./rust.nix {
             pkgs = import nixpkgs { system = pkgs.system; overlays = [ (import oxalica-rust) ]; };
             crate2nix = crate2nix.packages.${pkgs.system}.default;

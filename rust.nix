@@ -3,6 +3,7 @@
   , rustVersion
   , crate2nix
   , withPkgs
+  , additionalLibraryPaths ? null
   , ...
 }:
 let
@@ -28,6 +29,9 @@ in
       alias vim=nvim
 
       export RUST_BACKTRACE=full
+      ${if ! builtins.isNull additionalLibraryPaths
+        then ''export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:${additionalLibraryPaths}"''
+        else ''''}
 
       echo "Rust version: $(rustc --version)"
       echo "Cargo version: $(cargo --version)"
