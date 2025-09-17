@@ -54,7 +54,6 @@
             ripgrep
             just
             gnumake
-            neovim
             procs
             bottom
             hexyl
