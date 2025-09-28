@@ -50,6 +50,9 @@
           crate2nix' = crate2nix.packages.${pkgs.system}.default;
           commonPackages = with pkgs; [
             git
+            curl
+            httpie
+            wget
             bat
             fd
             ripgrep
