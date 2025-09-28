@@ -5,8 +5,9 @@
   pkgs,
   commonPackages,
   version ? "latest",
-  crate2nix,
+  crate2nix',
   withPkgs ? [ ],
+  postHook ? "",
   additionalLibraryPaths ? null,
   ...
 }:
@@ -32,6 +33,8 @@ let
     ];
   };
   aliases = ''
+    echo
+
     alias v=nvim
     alias vim=nvim
     alias fmt="cargo fmt --all"
@@ -60,7 +63,10 @@ let
     echo "  audit: Check for security vulnerabilities"
     echo "  deny: Check licenses and dependencies"
     echo "  sort-deps: Sort Cargo.toml dependencies"
+
+    echo
   '';
+
   shellHookFor = rustPackage: ''
 
     ${aliases}
@@ -77,6 +83,8 @@ let
     echo "Cargo version: $(cargo --version)"
     echo "Rust toolchain location: ${rustPackage}/bin"
     echo "RUST_SRC_PATH (stdlib location): $RUST_SRC_PATH"
+
+    ${postHook}
   '';
   allPackages =
     with pkgs;
@@ -96,7 +104,7 @@ let
       nodejs-slim
       git
     ]
-    ++ [ crate2nix ]
+    ++ [ crate2nix' ]
     ++ withPkgs
     ++ commonPackages;
 in

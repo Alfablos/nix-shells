@@ -1,0 +1,52 @@
+# Nix REPL Commands for Browsing Oxalica Rust Versions
+
+# Start Nix REPL with oxalica overlay
+nix repl --expr 'let oxalica-rust = builtins.fetchTarball "https://github.com/oxalica/rust-overlay/archive/master.tar.gz"; in import <nixpkgs> { overlays = [ (import oxalica-rust) ]; }'
+
+# Check available channels
+rust-bin
+
+# Browse stable versions
+rust-bin.stable
+builtins.attrNames rust-bin.stable
+
+# Browse nightly versions  
+rust-bin.nightly
+builtins.attrNames rust-bin.nightly
+
+# Check latest stable
+rust-bin.stable.latest
+
+# Check latest nightly
+rust-bin.nightly.latest
+
+# Check specific version
+rust-bin.stable."1.84.0"
+rust-bin.nightly."2024-01-01"
+
+# See what's in a toolchain
+rust-bin.stable.latest.default
+
+# Check available extensions
+rust-bin.stable.latest.default.extensions
+
+# Inspect a specific toolchain with extensions
+rust-bin.stable.latest.default.override {
+  extensions = [ "rust-src" "clippy" "rust-analyzer" "rustfmt" ];
+}
+
+
+# Inspection without REPL
+
+# List all stable versions
+nix eval --impure --json --expr 'let oxalica-rust = builtins.fetchTarball "https://github.com/oxalica/rust-overlay/archive/master.tar.gz"; in (import <nixpkgs> { overlays = [ (import oxalica-rust) ]; }).rust-bin.stable' | jq 'keys'
+
+# Check latest stable version
+nix eval --impure --expr 'let oxalica-rust = builtins.fetchTarball "https://github.com/oxalica/rust-overlay/archive/master.tar.gz"; in (import <nixpkgs> { overlays = [ (import oxalica-rust) ]; }).rust-bin.stable.latest.default'
+
+# List all nightly versions
+nix eval --impure --json --expr 'let oxalica-rust = builtins.fetchTarball "https://github.com/oxalica/rust-overlay/archive/master.tar.gz"; in (import <nixpkgs> { overlays = [ (import oxalica-rust) ]; }).rust-bin.nightly' | jq 'keys'
+
+# Check specific version details
+nix eval --impure --expr 'let oxalica-rust = builtins.fetchTarball "https://github.com/oxalica/rust-overlay/archive/master.tar.gz"; in (import <nixpkgs> { overlays = [ (import oxalica-rust) ]; }).rust-bin.stable."1.84.0".default'
+

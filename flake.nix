@@ -47,6 +47,7 @@
       devShells = forAllSystems (
         pkgs:
         let
+          crate2nix' = crate2nix.packages.${pkgs.system}.default;
           commonPackages = with pkgs; [
             git
             bat
@@ -60,39 +61,25 @@
             hyperfine
             tokei
           ];
+          rustShell =
+            prefs:
+            (import ./rust.nix (
+              prefs
+              // {
+                inherit commonPackages crate2nix';
+                pkgs = import nixpkgs {
+                  inherit (pkgs) system;
+                  overlays = [
+                    (import oxalica-rust)
+                  ];
+                };
+              }
+            ));
         in
         {
           default = self.devShells.${pkgs.system}.rust-stable;
-          rust-stable =
-            { ... }@prefs:
-            (import ./rust.nix (
-              prefs
-              // {
-                inherit commonPackages;
-                pkgs = import nixpkgs {
-                  inherit (pkgs) system;
-                  overlays = [
-                    (import oxalica-rust)
-                  ];
-                };
-                crate2nix = crate2nix.packages.${pkgs.system}.default;
-              }
-            )).stable;
-          rust-nightly =
-            { ... }@prefs:
-            (import ./rust.nix (
-              prefs
-              // {
-                inherit commonPackages;
-                pkgs = import nixpkgs {
-                  inherit (pkgs) system;
-                  overlays = [
-                    (import oxalica-rust)
-                  ];
-                };
-                crate2nix = crate2nix.packages.${pkgs.system}.default;
-              }
-            )).nightly;
+          rust-stable = { ... }@prefs: (rustShell prefs).stable;
+          rust-nightly = { ... }@prefs: (rustShell prefs).nightly;
         }
       );
 
