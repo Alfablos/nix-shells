@@ -15,7 +15,7 @@
             (writeShellScriptBin "rustrover" "tmux new -d 'rust-rover .'")  # Rustrover must be in path outside the shell
           ];
           postHook = ''
-            exec -l zsh
+            exec -l zsh # ALIASES WILL BE LOST!
           '';
         };
       });
