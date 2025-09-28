@@ -5,7 +5,7 @@
   pkgs,
   commonPackages,
   version ? "latest",
-  crate2nix,
+  crate2nix',
   withPkgs ? [ ],
   additionalLibraryPaths ? null,
   ...
@@ -96,7 +96,7 @@ let
       nodejs-slim
       git
     ]
-    ++ [ crate2nix ]
+    ++ [ crate2nix' ]
     ++ withPkgs
     ++ commonPackages;
 in

@@ -47,7 +47,7 @@
       devShells = forAllSystems (
         pkgs:
         let
-          crate2nix = crate2nix.packages.${pkgs.system}.default;
+          crate2nix' = crate2nix.packages.${pkgs.system}.default;
           commonPackages = with pkgs; [
             git
             bat
@@ -66,7 +66,7 @@
             (import ./rust.nix (
               prefs
               // {
-                inherit commonPackages crate2nix;
+                inherit commonPackages crate2nix';
                 pkgs = import nixpkgs {
                   inherit (pkgs) system;
                   overlays = [
