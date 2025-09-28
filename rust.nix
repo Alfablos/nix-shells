@@ -7,7 +7,7 @@
   version ? "latest",
   crate2nix',
   withPkgs ? [ ],
-  withHook ? "",
+  postHook ? "",
   additionalLibraryPaths ? null,
   ...
 }:
@@ -61,8 +61,8 @@ let
     echo "  audit: Check for security vulnerabilities"
     echo "  deny: Check licenses and dependencies"
     echo "  sort-deps: Sort Cargo.toml dependencies"
-  ''
-  + withHook;
+  '';
+
   shellHookFor = rustPackage: ''
 
     ${aliases}
@@ -79,6 +79,8 @@ let
     echo "Cargo version: $(cargo --version)"
     echo "Rust toolchain location: ${rustPackage}/bin"
     echo "RUST_SRC_PATH (stdlib location): $RUST_SRC_PATH"
+
+    ${postHook}
   '';
   allPackages =
     with pkgs;
