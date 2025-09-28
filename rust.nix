@@ -7,6 +7,7 @@
   version ? "latest",
   crate2nix',
   withPkgs ? [ ],
+  withHook ? "",
   additionalLibraryPaths ? null,
   ...
 }:
@@ -60,7 +61,8 @@ let
     echo "  audit: Check for security vulnerabilities"
     echo "  deny: Check licenses and dependencies"
     echo "  sort-deps: Sort Cargo.toml dependencies"
-  '';
+  ''
+  + withHook;
   shellHookFor = rustPackage: ''
 
     ${aliases}
