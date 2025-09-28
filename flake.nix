@@ -53,6 +53,8 @@
             curl
             httpie
             wget
+            jq
+            fx
             bat
             fd
             ripgrep
