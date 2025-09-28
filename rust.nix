@@ -33,6 +33,8 @@ let
     ];
   };
   aliases = ''
+    echo
+
     alias v=nvim
     alias vim=nvim
     alias fmt="cargo fmt --all"
@@ -61,6 +63,8 @@ let
     echo "  audit: Check for security vulnerabilities"
     echo "  deny: Check licenses and dependencies"
     echo "  sort-deps: Sort Cargo.toml dependencies"
+
+    echo
   '';
 
   shellHookFor = rustPackage: ''
