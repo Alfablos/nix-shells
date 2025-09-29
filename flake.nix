@@ -1,7 +1,7 @@
 {
   description = "Rust shell";
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs";
+    nixpkgs.url = "github:nixos/nixpkgs?ref=nixpkgs-unstable";
     oxalica-rust = {
       url = "github:oxalica/rust-overlay";
       inputs.nixpkgs.follows = "nixpkgs";
