@@ -5,32 +5,34 @@
   pkgs,
   commonPackages,
   version ? "latest",
-  crate2nix',
   withPkgs ? [ ],
   postHook ? "",
   additionalLibraryPaths ? null,
   ...
 }:
 let
-  oxalica-override-stable = pkgs.rust-bin.stable.${version}.default.override {
-    extensions = [
-      "rust-src"
-      "clippy"
-      "rust-analyzer"
-      "rustfmt"
-      "cargo"
-      "rustc"
-    ];
-  };
-  oxalica-override-nightly = pkgs.rust-bin.nightly.${version}.default.override {
-    extensions = [
-      "rust-src"
-      "clippy"
-      "rust-analyzer"
-      "rustfmt"
-      "cargo"
-      "rustc"
-    ];
+  getRustToolchain =
+    {
+      channel ? "stable",
+      version,
+    }:
+    if builtins.pathExists ./rust-toolchain.toml then
+      (pkgs.rust-bin.fromRustupToolchainFile ./rust-toolchain.toml)
+    else
+      pkgs.rust-bin.${channel}.${version}.default.override {
+        extensions = [
+          "rust-src"
+          "clippy"
+          "rust-analyzer"
+          "rustfmt"
+          "cargo"
+          "rustc"
+        ];
+      };
+  oxalica-override-stable = getRustToolchain { inherit version; };
+  oxalica-override-nightly = getRustToolchain {
+    channel = "nightly";
+    inherit version;
   };
   aliases = ''
     echo
@@ -76,20 +78,22 @@ let
       if !builtins.isNull additionalLibraryPaths then
         ''export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:${additionalLibraryPaths}"''
       else
-        ''''
+        ""
     }
 
     echo "Rust version: $(rustc --version)"
     echo "Cargo version: $(cargo --version)"
     echo "Rust toolchain location: ${rustPackage}/bin"
     echo "RUST_SRC_PATH (stdlib location): $RUST_SRC_PATH"
+    echo "RUSTFLAGS: $RUSTFLAGS"
 
     ${postHook}
   '';
   allPackages =
+    # installing llvmPackages.bintools if not linux (macOS)
+    # but NOT setting RUSTFLAGS="-C link-arg=-fuse-ls=lld"
     with pkgs;
     [
-      llvmPackages.bintools
       pkg-config
       cargo-watch
       cargo-expand
@@ -104,7 +108,7 @@ let
       nodejs-slim
       git
     ]
-    ++ [ crate2nix' ]
+    ++ (if stdenv.isLinux then [ mold ] else [ llvmPackages.bintools ])
     ++ withPkgs
     ++ commonPackages;
 in
@@ -112,11 +116,13 @@ in
   stable = pkgs.mkShell {
     packages = allPackages ++ [ oxalica-override-stable ];
     RUST_SRC_PATH = "${oxalica-override-stable}/lib/rustlib/src/rust";
+    RUSTFLAGS = "-C link-arg=-fuse-ls=${if pkgs.stdenv.isLinux then pkgs.mold else ""}";
     shellHook = shellHookFor oxalica-override-stable;
   };
   nightly = pkgs.mkShell {
     packages = allPackages ++ [ oxalica-override-nightly ];
     RUST_SRC_PATH = "${oxalica-override-nightly}/lib/rustlib/src/rust";
+    RUSTFLAGS = "-C link-arg=-fuse-ls=${if pkgs.stdenv.isLinux then pkgs.mold else ""}";
     shellHook = shellHookFor oxalica-override-nightly;
   };
 }
