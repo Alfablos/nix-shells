@@ -6,11 +6,6 @@
       url = "github:oxalica/rust-overlay";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    crate2nix = {
-      # Only used for `crate2nix generate`
-      url = "github:nix-community/crate2nix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     # git-hooks.url = "github:cachix/git-hooks.nix";
   };
 
@@ -18,9 +13,8 @@
     {
       self,
       nixpkgs,
-      crate2nix,
       oxalica-rust,
-    # git-hooks
+      # git-hooks
     }:
     let
       forAllSystems =
@@ -47,7 +41,6 @@
       devShells = forAllSystems (
         pkgs:
         let
-          crate2nix' = crate2nix.packages.${pkgs.system}.default;
           commonPackages = with pkgs; [
             git
             curl
@@ -71,7 +64,7 @@
             (import ./rust.nix (
               prefs
               // {
-                inherit commonPackages crate2nix';
+                inherit commonPackages;
                 pkgs = import nixpkgs {
                   inherit (pkgs) system;
                   overlays = [
