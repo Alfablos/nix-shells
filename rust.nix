@@ -122,7 +122,7 @@ in
   nightly = pkgs.mkShell {
     packages = allPackages ++ [ oxalica-override-nightly ];
     RUST_SRC_PATH = "${oxalica-override-nightly}/lib/rustlib/src/rust";
-    RUSTFLAGS = "-C link-arg=-fuse-ls=${if pkgs.stdenv.isLinux then pkgs.mold else ""}";
+    RUSTFLAGS = "-C link-arg=-fuse-ld=${if pkgs.stdenv.isLinux then pkgs.mold else ""}";
     shellHook = shellHookFor oxalica-override-nightly;
   };
 }
