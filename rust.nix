@@ -116,7 +116,7 @@ in
   stable = pkgs.mkShell {
     packages = allPackages ++ [ oxalica-override-stable ];
     RUST_SRC_PATH = "${oxalica-override-stable}/lib/rustlib/src/rust";
-    RUSTFLAGS = "-C link-arg=-fuse-ls=${if pkgs.stdenv.isLinux then pkgs.mold else ""}";
+    RUSTFLAGS = "-C link-arg=-fuse-ld=${if pkgs.stdenv.isLinux then pkgs.mold else ""}";
     shellHook = shellHookFor oxalica-override-stable;
   };
   nightly = pkgs.mkShell {
