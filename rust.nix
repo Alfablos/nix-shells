@@ -116,13 +116,13 @@ in
   stable = pkgs.mkShell {
     packages = allPackages ++ [ oxalica-override-stable ];
     RUST_SRC_PATH = "${oxalica-override-stable}/lib/rustlib/src/rust";
-    RUSTFLAGS = "-C link-arg=-fuse-ld=${if pkgs.stdenv.isLinux then pkgs.mold else ""}";
+    RUSTFLAGS = if pkgs.stdenv.isLinux then "-C link-arg=-fuse-ld=mold" else "";
     shellHook = shellHookFor oxalica-override-stable;
   };
   nightly = pkgs.mkShell {
     packages = allPackages ++ [ oxalica-override-nightly ];
     RUST_SRC_PATH = "${oxalica-override-nightly}/lib/rustlib/src/rust";
-    RUSTFLAGS = "-C link-arg=-fuse-ld=${if pkgs.stdenv.isLinux then pkgs.mold else ""}";
+    RUSTFLAGS = if pkgs.stdenv.isLinux then "-C link-arg=-fuse-ld=mold" else "";
     shellHook = shellHookFor oxalica-override-nightly;
   };
 }
